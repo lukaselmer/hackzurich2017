@@ -4,6 +4,9 @@ description: A new Flutter project.
 dependencies:
   flutter:
     sdk: flutter
+  barcodescanner:
+      #this will be replaced with a proper dependency, once the plugin is release to dart-pub
+      git: https://github.com/swissonid/BarcodeScannerPlugin.git
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:barcodescanner/barcodescanner.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         // "hot reload" (press "r" in the console where you ran "flutter run",
         // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
         // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -45,16 +46,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  var _counter = "nothing scanned yet";
 
-  void _incrementCounter() {
+
+  _scanBarcode() async {
+    Map<String, dynamic> barcodeData;
+    //barcodeData is a JSON (Map<String,dynamic>) like this:
+    //{barcode: '12345', barcodeFormat: 'ean-13'}
+    barcodeData = await Barcodescanner.scanBarcode;
+
+    if (!mounted) return null;
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _counter = barcodeData['barcode'];
     });
   }
 
@@ -70,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
+        title: new Padding(
+            padding: new EdgeInsets.only(left: 16.0),
+            child: new Text(widget.title),)
       ),
       body: new Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -102,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _scanBarcode,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
