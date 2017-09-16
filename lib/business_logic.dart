@@ -22,7 +22,7 @@ Future<String> _createGroup(emailHash, imageUrl) async {
 Future<Null> _createUser(String imageUrl, String emailHash, String groupId) {
   return db()
       .child("users/${emailHash}")
-      .set({"group": emailHash, "imageUrl": imageUrl});
+      .set({"group": groupId, "imageUrl": imageUrl});
 }
 
 Future<Null> addUser(String groupId, String email) async {
