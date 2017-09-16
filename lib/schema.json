@@ -8,7 +8,6 @@
       "barcode2": {
         "emailHash1": "imageurl1"
       }
-
     }
   },
   "groups": {
@@ -32,6 +31,6 @@
     "emailHash3": {
       "group": "group3",
       "imageUrl": "imageUrl3"
-    },
+    }
   }
 }
