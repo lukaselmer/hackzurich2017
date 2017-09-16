@@ -4,13 +4,15 @@ import 'package:barcodescanner/barcodescanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
+import 'package:hackzurich2017/group_page.dart';
 import 'package:hackzurich2017/info_page.dart';
-import 'package:hackzurich2017/widget_helper.dart';
+
 
 class StartPage extends StatefulWidget {
 
 
   static MaterialPageRoute createRoute(BuildContext context, String title, FirebaseUser user){
+
     return new MaterialPageRoute(
         builder: (BuildContext context) => new StartPage(title: title, currentUser: user,));
   }
@@ -42,9 +44,16 @@ class _StartPageState extends State<StartPage> {
                 new Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: new RaisedButton(
-                        onPressed: scanBarcode(),
+                        onPressed: _scanBarcode,
                         child: new Text("SCANN")
                     ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: new RaisedButton(
+                      onPressed: _navigateToAddGroup,
+                      child: new Text("GROUP")
+                  ),
                 ),
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -97,7 +106,7 @@ class _StartPageState extends State<StartPage> {
     return null;
   }
 
-  scanBarcode() async {
+  _scanBarcode() async {
     Map<String, dynamic> barcodeData;
     //barcodeData is a JSON (Map<String,dynamic>) like this:
     //{barcode: '12345', barcodeFormat: 'ean-13'}
@@ -108,4 +117,8 @@ class _StartPageState extends State<StartPage> {
     Navigator.push(context, InfoPage.createRoute(context, itemSnapshot));
   }
 
+
+  _navigateToAddGroup() async {
+    await Navigator.push(context, GroupPage.createRoute(context));
+  }
 }

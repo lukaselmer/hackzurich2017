@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/info_page.dart';
-import 'package:hackzurich2017/start_screen.dart';
+import 'package:hackzurich2017/start_page.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);

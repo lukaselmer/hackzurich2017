@@ -2,6 +2,7 @@ import 'package:barcodescanner/barcodescanner.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
+import 'package:hackzurich2017/start_page.dart';
 
 
 
@@ -43,9 +44,15 @@ class _InfoPageState extends State<InfoPage> {
                 new Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: new RaisedButton(
-                        onPressed: scanBarcode,
+                        onPressed: _scanBarcode,
                         child: new Text("Scann again"),
                     ),
+                ),new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new RaisedButton(
+                    onPressed: _navigateToStartPage,
+                    child: new Text("I DON'T LIKE IT"),
+                  ),
                 )
               ],
             ),
@@ -69,7 +76,7 @@ class _InfoPageState extends State<InfoPage> {
     }*/
   }
 
-  scanBarcode() async {
+  _scanBarcode() async {
     Map<String, dynamic> barcodeData;
     //barcodeData is a JSON (Map<String,dynamic>) like this:
     //{barcode: '12345', barcodeFormat: 'ean-13'}
@@ -78,6 +85,13 @@ class _InfoPageState extends State<InfoPage> {
     await items().child(itemId).set(itemId);
     var itemSnapshot = await getInfoFor(itemId);
     Navigator.push(context, InfoPage.createRoute(context, itemSnapshot));
+  }
+
+  _navigateToStartPage() async {
+    var firebaseUser = await auth.currentUser();
+    await Navigator.push(context, StartPage.createRoute(context
+        , "Start Page"
+        , firebaseUser));
   }
 
 }
