@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "920263349223",
+    "firebase_url": "https://hackzurich2017food.firebaseio.com",
+    "project_id": "hackzurich2017food",
+    "storage_bucket": "hackzurich2017food.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920263349223:android:e24c470e28389aa2",
+        "android_client_info": {
+          "package_name": "com.hackzurich.hackzurich2017"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920263349223-db5bo5cv29dvk6o107mf3dgngncm4rei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hackzurich.hackzurich2017",
+            "certificate_hash": "1889adcb46ab17f94b8b600435e86e2a62c0ca8c"
+          }
+        },
+        {
+          "client_id": "920263349223-9eq8k4u78sqfrul04jh836jcduh8rhs1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEdZZ0hyyVxpzxR-WQRixNYLXUAJBcueA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920263349223-9eq8k4u78sqfrul04jh836jcduh8rhs1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
