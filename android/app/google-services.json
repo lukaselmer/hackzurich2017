@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "920263349223-j3tkhkn7k4gd51bu2mjmcho9jpc91hd5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hackzurich.hackzurich2017",
+            "certificate_hash": "327837a1786612f8b26a86bfc58b2102dea24220"
+          }
+        },
+        {
           "client_id": "920263349223-db5bo5cv29dvk6o107mf3dgngncm4rei.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
