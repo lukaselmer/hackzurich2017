@@ -8,13 +8,12 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 const request = require('request-promise');
-
+const barcodeRef = functions.database.ref('/barcodes/{barcode}');
 // Extract Data from Write
-exports.openfood_fetcher = functions.database.ref('/barcodes/{barcode}').onWrite(event => {
-    if (event.data.previous.exists()) {
-        return null;
-    }
-
+exports.openfood_fetcher = barcodeRef.onWrite(event => {
+    if (!event.data.exists()) {
+    return;
+  }
     const barcode = event.data.val() + ""; //to declare value as string - type unsafe language :(
     if (typeof barcode !== 'string') {
         return null;
@@ -43,6 +42,7 @@ function getDataBasedOnBarcode(barcode) {
         if (response.statusCode === 200) {
             return response.body;
         }
+        console.log('ohoh',response.statusCode);
         throw response.body;
     }).then(body => {
         let path = `/barcodes/`+barcode;
