@@ -31,7 +31,7 @@ Widget groupsList(FirebaseUser user) {
   if (user == null) return new Text('Please login first');
 
   return new FirebaseAnimatedList(
-    query: myGroups(user),
+    query: groups(), // TODO: change this to: myGroups(user),
     sort: (a, b) => b.key.compareTo(a.key),
     padding: new EdgeInsets.all(8.0),
     reverse: true,
