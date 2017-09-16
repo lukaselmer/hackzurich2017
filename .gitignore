@@ -7,3 +7,5 @@ build/
 ios/.generated/
 packages
 .flutter-plugins
+node_modules/
+package-lock.json
