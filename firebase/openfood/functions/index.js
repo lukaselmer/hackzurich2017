@@ -12,10 +12,10 @@ const request = require('request-promise');
 // Extract Data from Write
 exports.shortenUrl = functions.database.ref('/links/{linkID}').onWrite(event => {
     const barcode = event.data;
-if (typeof barcode.val() !== 'string') {
-    return;
-}
-return getDataBasedOnBarcode(barcode);
+    if (typeof barcode.val() !== 'string') {
+        return;
+    }
+    return getDataBasedOnBarcode(barcode);
 });
 
 // Request to Openfood based on
@@ -35,12 +35,12 @@ function createOpenfoodRequest(barcode) {
 function getDataBasedOnBarcode(barcode) {
     return request(createOpenfoodRequest(barcode)).then(response => {
         if (response.statusCode === 200) {
-        return response.body;
-    }
-    throw response.body;
-}).then(body => {
+            return response.body;
+        }
+        throw response.body;
+    }).then(body => {
         return admin.database().ref(`/links/${key}`).set({
             body
         });
-});
+    });
 }
