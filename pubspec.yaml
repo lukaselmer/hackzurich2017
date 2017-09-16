@@ -38,6 +38,7 @@ flutter:
     - images/ic_good.png
     - images/ic_not_so_good.png
     - images/app_icon.png
+    - images/bg_login.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

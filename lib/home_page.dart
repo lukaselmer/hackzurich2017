@@ -43,13 +43,60 @@ class _MyHomePageState extends State<MyHomePage> {
           child: new Text("App Name")),
       ),
       drawer: createDrawer,
-      body: createBody,
+      body: _createBody(),
       floatingActionButton: createfloatingActionButton,
     );
   }
 
-  Widget get createBody {
-    return loginBody;
+  Widget _createBody() {
+    return new Container(
+      decoration: new BoxDecoration(
+        image: new DecorationImage(
+            image: new AssetImage("images/bg_login.png"),
+            fit: BoxFit.cover,
+        )
+      ),
+      child: new Center(
+        child: new Column(
+          children: [
+            new Padding(padding: const EdgeInsets.only(top: 32.0)
+              ,child: new Image.asset("images/app_icon.png", scale: 3.5,)
+            ),
+            new Expanded(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    new Row(
+                      children:[
+                        new Expanded(
+                            child:new Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+                              child: new RaisedButton(
+                                  color: Colors.red,
+                                  onPressed: _ensureLoggedIn
+                                  , child: new Text("LOGIN", style: new TextStyle(color: Colors.white),)),
+                            )
+                          )
+                      ]
+                    ),
+                    new Row(
+                      children: [
+                        new Expanded(
+                            child: new FlatButton(
+                                onPressed: _scanBarcode
+                                , child: new Text("JUST SCAN"
+                                          , style: new TextStyle(color: Colors.red),)),
+                        )
+                      ],
+                    )
+
+                  ],
+                )
+            ),
+          ],
+        ),
+      )
+    );
   }
 
   Widget get loginBody {
