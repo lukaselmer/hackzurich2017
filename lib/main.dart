@@ -63,22 +63,55 @@ class _MyHomePageState extends State<MyHomePage> {
           child: _signInBar(),
         ),
       ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Flexible(
-              child: groupsList(_currentUser),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _createGroupDialog,
-        tooltip: 'Create Group',
-        child: new Icon(Icons.add),
+      drawer: createDrawer,
+      body: createBody,
+      floatingActionButton: createfloatingActionButton,
+    );
+  }
+
+  Widget get createBody {
+    return loginBody;
+  }
+
+  Widget get loginBody {
+    return new Center(
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          new RaisedButton(onPressed: _ensureLoggedIn, child: new Text("Login"),),
+          new RaisedButton(onPressed: _scanBarcode, child: new Text("Just Scann"),)
+        ],
       ),
     );
+  }
+
+  FloatingActionButton get createfloatingActionButton {
+    if (!signedIn()) {
+      return null;
+    }
+    return new FloatingActionButton(
+      onPressed: _createGroupDialog,
+      tooltip: 'Create Group',
+      child: new Icon(Icons.add),
+    );
+  }
+
+  Drawer get createDrawer {
+    if (!signedIn()) {
+      return null;
+    }
+    return new Drawer(
+        child: new ListView(
+      children: [
+        new UserAccountsDrawerHeader(
+          currentAccountPicture: new CircleAvatar(
+            backgroundImage: new NetworkImage(_currentUser.photoUrl),
+          ),
+          accountName: new Text(_currentUser.displayName),
+          accountEmail: new Text(_currentUser.email),
+        )
+      ],
+    ));
   }
 
   bool signedIn() {

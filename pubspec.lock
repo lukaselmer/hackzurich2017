@@ -289,7 +289,7 @@ packages:
     version: "0.2.1"
   sky_engine:
     description:
-      path: "../../hackzurich17/flutter/bin/cache/pkg/sky_engine"
+      path: "../github/flutter/bin/cache/pkg/sky_engine"
       relative: true
     source: path
     version: "0.0.99"
