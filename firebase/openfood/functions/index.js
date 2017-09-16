@@ -10,17 +10,10 @@ admin.initializeApp(functions.config().firebase);
 const request = require('request-promise');
 const barcodeRef = functions.database.ref('/barcodes/{barcode}');
 // Extract Data from Write
-exports.openfood_fetcher = barcodeRef.onCreate(event => {
-    if (event.data.previous.exists()) {
-        barcodeRef.transaction(
-            (currentData)=>{
-                console.log(`Transaction rollback function with the following data ${JSON.stringify(currentData)}`);
-                return currentData;
-            },
-            () => { console.err('uuhhh'); return null;}
-);
-    }
-
+exports.openfood_fetcher = barcodeRef.onWrite(event => {
+    if (!event.data.exists()) {
+    return;
+  }
     const barcode = event.data.val() + ""; //to declare value as string - type unsafe language :(
     if (typeof barcode !== 'string') {
         return null;
@@ -49,6 +42,7 @@ function getDataBasedOnBarcode(barcode) {
         if (response.statusCode === 200) {
             return response.body;
         }
+        console.log('ohoh',response.statusCode);
         throw response.body;
     }).then(body => {
         let path = `/barcodes/`+barcode;
