@@ -1,5 +1,7 @@
+import 'package:barcodescanner/barcodescanner.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:hackzurich2017/firebase_helper.dart';
 
 
 
@@ -35,7 +37,18 @@ class _InfoPageState extends State<InfoPage> {
       body: new Center(
         child: new Padding(
             padding: const EdgeInsets.only(top: 32.0, left: 64.0, right: 64.0, bottom: 32.0),
-            child: _getImage(),
+            child: new Column(
+              children:[
+                _getImage(),
+                new Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: new RaisedButton(
+                        onPressed: scanBarcode,
+                        child: new Text("Scann again"),
+                    ),
+                )
+              ],
+            ),
         )
       )
     );
@@ -43,7 +56,8 @@ class _InfoPageState extends State<InfoPage> {
 
   Widget _getImage() {
     print(snapshot.value);
-    return new Image.asset("images/ic_bad.png");
+    // new Icons(Icons.thumbs_up_down, size: 250.0, color: Colors.red[700]);
+    return new Icon(Icons.thumb_up,size: 250.0, color: Colors.green[700]);
    /* var sugarValue = snapshot.value['body'];//['data'][0]['nutrients']['sugars']['per_hundred'];
     var sugar = double.parse(sugarValue);
     if(sugar <= 10.0) {
@@ -54,4 +68,16 @@ class _InfoPageState extends State<InfoPage> {
       return
     }*/
   }
+
+  scanBarcode() async {
+    Map<String, dynamic> barcodeData;
+    //barcodeData is a JSON (Map<String,dynamic>) like this:
+    //{barcode: '12345', barcodeFormat: 'ean-13'}
+    barcodeData = await Barcodescanner.scanBarcode;
+    String itemId = barcodeData['barcode'];
+    await items().child(itemId).set(itemId);
+    var itemSnapshot = await getInfoFor(itemId);
+    Navigator.push(context, InfoPage.createRoute(context, itemSnapshot));
+  }
+
 }
