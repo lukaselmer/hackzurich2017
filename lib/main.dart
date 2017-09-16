@@ -12,7 +12,24 @@ final auth = FirebaseAuth.instance;
 
 main() async {
   await FirebaseDatabase.instance.setPersistenceEnabled(true);
-  runApp(new MyApp());
+  runApp(
+    new MaterialApp(
+      home: new MyApp(),
+      routes: <String, WidgetBuilder>{
+        // TODO: implement routes, see https://docs.flutter.io/flutter/material/MaterialApp-class.html
+        '/groups': (BuildContext context) => new GroupsPage(),
+        '/blabla': (BuildContext context) => new BlablaPage(),
+      },
+      onGenerateRoute: ((RouteSettings route) {
+        if (route.name.startsWith('/groups/')) {
+          return new GroupPage(route.name.split('/').last);
+        }
+        if (route.name.startsWith('/users/')) {
+          return new UserPage(route.name.split('/').last);
+        }
+      }),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -56,13 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!signedIn()) return signInPage();
+
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Align(
-          alignment: FractionalOffset.centerRight,
-          child: _signInBar(),
-        ),
-      ),
+      appBar: appBar(),
       body: new Center(
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -77,6 +91,29 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _createGroupDialog,
         tooltip: 'Create Group',
         child: new Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget signInPage() {
+    return new Scaffold(
+      backgroundColor: Colors.primaries[9],
+      body: new Center(
+        child: new RaisedButton(
+          onPressed: _signIn,
+          color: Colors.accents[4],
+          colorBrightness: Brightness.light,
+          child: new Text('Sign in'),
+        ),
+      ),
+    );
+  }
+
+  AppBar appBar() {
+    return new AppBar(
+      title: new Align(
+        alignment: FractionalOffset.centerRight,
+        child: _signInBar(),
       ),
     );
   }
