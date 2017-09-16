@@ -11,9 +11,13 @@ const request = require('request-promise');
 
 // Extract Data from Write
 exports.openfood_fetcher = functions.database.ref('/barcodes/{barcode}').onWrite(event => {
+    if (event.data.previous.exists()) {
+        return null;
+    }
+
     const barcode = event.data.val() + ""; //to declare value as string - type unsafe language :(
     if (typeof barcode !== 'string') {
-        return;
+        return null;
     }
     return getDataBasedOnBarcode(barcode);
 });
