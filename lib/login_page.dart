@@ -7,6 +7,12 @@ import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/start_page.dart';
 
+final _googleSignIn = new GoogleSignIn(
+  scopes: <String>[
+    'email',
+  ],
+);
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -22,6 +28,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final String title;
 
   _MyHomePageState({this.title});
+  @override
+  void initState() {
+    super.initState();
+    _googleSignIn.signInSilently();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,18 +103,18 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _currentUser = null;
     });
-    await googleSignIn.disconnect();
+    await _googleSignIn.disconnect();
   }
 
   Future<Null> _ensureLoggedIn() async {
-    GoogleSignInAccount user = googleSignIn.currentUser;
-    if (user == null) user = await googleSignIn.signInSilently();
-    if (user == null) user = await googleSignIn.signIn();
+    GoogleSignInAccount user = _googleSignIn.currentUser;
+    // if (user == null) user = await _googleSignIn.signInSilently();
+    if (user == null) user = await _googleSignIn.signIn();
 
     FirebaseUser firebaseUser = await auth.currentUser();
     if (await auth.currentUser() == null) {
       GoogleSignInAuthentication credentials =
-          await googleSignIn.currentUser.authentication;
+          await _googleSignIn.currentUser.authentication;
       firebaseUser = await auth.signInWithGoogle(
         idToken: credentials.idToken,
         accessToken: credentials.accessToken,
