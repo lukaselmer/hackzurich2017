@@ -10,7 +10,7 @@ admin.initializeApp(functions.config().firebase);
 const request = require('request-promise');
 
 // Extract Data from Write
-exports.shortenUrl = functions.database.ref('/links/{linkID}').onWrite(event => {
+exports.openfood_fetcher = functions.database.ref('/links/{linkID}').onWrite(event => {
     const barcode = event.data;
     if (typeof barcode.val() !== 'string') {
         return;
