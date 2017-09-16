@@ -8,11 +8,17 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 const request = require('request-promise');
-
+const barcodeRef = functions.database.ref('/barcodes/{barcode}');
 // Extract Data from Write
-exports.openfood_fetcher = functions.database.ref('/barcodes/{barcode}').onWrite(event => {
+exports.openfood_fetcher = barcodeRef.onCreate(event => {
     if (event.data.previous.exists()) {
-        return null;
+        barcodeRef.transaction(
+            (currentData)=>{
+                console.log(`Transaction rollback function with the following data ${JSON.stringify(currentData)}`);
+                return currentData;
+            },
+            () => { console.err('uuhhh'); return null;}
+);
     }
 
     const barcode = event.data.val() + ""; //to declare value as string - type unsafe language :(
