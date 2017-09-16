@@ -1,0 +1,37 @@
+{
+  "excludelist": {
+    "group1": {
+      "barcode1": {
+        "emailHash1": "imageurl1",
+        "emailHash2": "imageurl2"
+      },
+      "barcode2": {
+        "emailHash1": "imageurl1"
+      }
+
+    }
+  },
+  "groups": {
+    "group1": {
+      "emailHash1": "imageurl1",
+      "emailHash2": "imageurl2"
+    },
+    "group3": {
+      "emailHash3": "imageurl3"
+    }
+  },
+  "users": {
+    "emailHash1": {
+      "group": "group1",
+      "imageUrl": "imageUrl1"
+    },
+    "emailHash2": {
+      "group": "group1",
+      "imageUrl": "imageUrl2"
+    },
+    "emailHash3": {
+      "group": "group3",
+      "imageUrl": "imageUrl3"
+    },
+  }
+}
