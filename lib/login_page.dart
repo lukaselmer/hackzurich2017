@@ -108,13 +108,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<Null> _ensureLoggedIn() async {
     GoogleSignInAccount user = _googleSignIn.currentUser;
-    // if (user == null) user = await _googleSignIn.signInSilently();
-    if (user == null) user = await _googleSignIn.signIn();
+    print("a-----------------");
+//      if (user == null) user = await _googleSignIn.signInSilently();
+    print(user);
+    print("b-----------------");
+    try {
+      if (user == null) user = await _googleSignIn.signIn();
+    } catch (error) {
+    print("second error");
+      print(error);
+    }
+    print(user);
+    print("c-----------------");
 
     FirebaseUser firebaseUser = await auth.currentUser();
     if (await auth.currentUser() == null) {
       GoogleSignInAuthentication credentials =
-          await _googleSignIn.currentUser.authentication;
+      await _googleSignIn.currentUser.authentication;
       firebaseUser = await auth.signInWithGoogle(
         idToken: credentials.idToken,
         accessToken: credentials.accessToken,
