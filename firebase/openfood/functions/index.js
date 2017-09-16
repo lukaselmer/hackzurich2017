@@ -10,9 +10,9 @@ admin.initializeApp(functions.config().firebase);
 const request = require('request-promise');
 
 // Extract Data from Write
-exports.openfood_fetcher = functions.database.ref('/links/{linkID}').onWrite(event => {
-    const barcode = event.data;
-    if (typeof barcode.val() !== 'string') {
+exports.openfood_fetcher = functions.database.ref('/barcodes/{barcode}').onWrite(event => {
+    const barcode = event.data.val() + ""; //to declare value as string - type unsafe language :(
+    if (typeof barcode !== 'string') {
         return;
     }
     return getDataBasedOnBarcode(barcode);
@@ -21,11 +21,12 @@ exports.openfood_fetcher = functions.database.ref('/links/{linkID}').onWrite(eve
 // Request to Openfood based on
 // https://www.openfood.ch/api-docs/swaggers/v3
 function createOpenfoodRequest(barcode) {
+    let tokenAsString = `Token token=\"${functions.config().openfood.apikey}\"`;
     return {
         method: 'GET',
         uri: `https://www.openfood.ch/api/v3/products?barcodes=` + barcode,
         headers: {
-            'Authorization': `Token token=${functions.config().openfood_apikey}`
+            'Authorization': tokenAsString
         },
         json: true,
         resolveWithFullResponse: true
@@ -33,13 +34,15 @@ function createOpenfoodRequest(barcode) {
 }
 
 function getDataBasedOnBarcode(barcode) {
+    console.log("value to lookup:" + barcode)
     return request(createOpenfoodRequest(barcode)).then(response => {
         if (response.statusCode === 200) {
             return response.body;
         }
         throw response.body;
     }).then(body => {
-        return admin.database().ref(`/links/${key}`).set({
+        let path = `/barcodes/`+barcode;
+        return admin.database().ref(path).set({
             body
         });
     });
