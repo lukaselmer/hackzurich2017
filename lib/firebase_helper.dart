@@ -4,11 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 final googleSignIn = new GoogleSignIn();
 final auth = FirebaseAuth.instance;
-
-
 
 DatabaseReference db() {
   return FirebaseDatabase.instance.reference();
@@ -34,7 +31,7 @@ Query usersForGroup(String groupId) {
   return db().child('group_users/$groupId');
 }
 
-DatabaseReference items(){
+DatabaseReference items() {
   return db().child('barcodes');
 }
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
 Future<Null> afterLogin(String emailHash, String imageUrl) async {

@@ -4,13 +4,12 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
-
-
 Widget groupsList(FirebaseUser user) {
   if (user == null) return new Text('Please login first');
 
   return new FirebaseAnimatedList(
-    query: groups(), // TODO: change this to: myGroups(user),
+    query: groups(),
+    // TODO: change this to: myGroups(user),
     sort: (a, b) => b.key.compareTo(a.key),
     padding: new EdgeInsets.all(8.0),
     reverse: true,
@@ -51,8 +50,9 @@ class GroupListItem extends StatelessWidget {
             new Container(
               margin: const EdgeInsets.only(right: 16.0),
               child: new CircleAvatar(
-                  backgroundImage:
-                      new NetworkImage(snapshot.value['ownerPhotoUrl'])),
+                backgroundImage:
+                    new NetworkImage(snapshot.value['ownerPhotoUrl']),
+              ),
             ),
             new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
