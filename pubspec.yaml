@@ -11,6 +11,9 @@ dependencies:
   firebase_database: 0.1.0
   firebase_storage: 0.0.6
   firebase_messaging: 0.0.5
+  barcodescanner:
+    #this will be replaced with a proper dependency, once the plugin is release to dart-pub
+    git: https://github.com/swissonid/BarcodeScannerPlugin.git
 
 dev_dependencies:
   flutter_test:

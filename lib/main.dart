@@ -1,9 +1,11 @@
+import 'package:barcodescanner/barcodescanner.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
 
 final googleSignIn = new GoogleSignIn();
 final auth = FirebaseAuth.instance;
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Conshop',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: new MyHomePage(title: 'Conshop'),
     );
@@ -36,37 +38,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  bool _signedIn = false;
+  var _currentUser;
+  var _barcode = 'Not scanned yet';
+
+  _scanBarcode() async {
+    Map<String, dynamic> barcodeData;
+    //barcodeData is a JSON (Map<String,dynamic>) like this:
+    //{barcode: '12345', barcodeFormat: 'ean-13'}
+    barcodeData = await Barcodescanner.scanBarcode;
+
+    if (!mounted) return null;
+
+    setState(() {
+      _barcode = barcodeData['barcode'];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setState(() {
+        _currentUser = account;
+      });
+    });
+    googleSignIn.signInSilently();
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Align(
-          alignment: FractionalOffset.centerRight,
-          child: _signInBar(),
-        ),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Flexible(
-              child: new FirebaseAnimatedList(
-                query: reference,
-                sort: (a, b) => b.key.compareTo(a.key),
-                padding: new EdgeInsets.all(8.0),
-                reverse: true,
-                itemBuilder: (_, DataSnapshot snapshot,
-                    Animation<double> animation, __) {
-                  return new Group(snapshot: snapshot, animation: animation);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: appBar(),
+      body: body(),
       floatingActionButton: new FloatingActionButton(
         onPressed: _createGroupDialog,
         tooltip: 'Create Group',
@@ -75,19 +78,60 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _signInBar() {
-    if (!_signedIn) {
-      return new FlatButton(
-          onPressed: _signIn, child: new Text('Sign in'));
-    }
+  bool signedIn() {
+    return _currentUser != null;
+  }
 
-    return new CircleAvatar(
-      backgroundImage: new NetworkImage(googleSignIn.currentUser.photoUrl),
+  Center body() {
+    return new Center(
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Flexible(
+            child: new FirebaseAnimatedList(
+              query: reference,
+              sort: (a, b) => b.key.compareTo(a.key),
+              padding: new EdgeInsets.all(8.0),
+              reverse: true,
+              itemBuilder:
+                  (_, DataSnapshot snapshot, Animation<double> animation, __) {
+                return new Group(snapshot: snapshot, animation: animation);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  void _createGroupDialog() {
-    _createGroup('Hello World');
+  AppBar appBar() {
+    return new AppBar(
+      title: new Align(
+        alignment: FractionalOffset.centerRight,
+        child: _signInBar(),
+      ),
+    );
+  }
+
+  Widget _signInBar() {
+    if (!signedIn()) {
+      return new FlatButton(onPressed: _signIn, child: new Text('Sign in'));
+    }
+    return new Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        new FlatButton(onPressed: _scanBarcode, child: new Icon(Icons.scanner)),
+        new FlatButton(onPressed: _signOut, child: new Icon(Icons.exit_to_app)),
+        new CircleAvatar(
+          backgroundImage: new NetworkImage(googleSignIn.currentUser.photoUrl),
+        ),
+      ],
+    );
+  }
+
+  Future<Null> _createGroupDialog() async {
+    await _ensureLoggedIn();
+    _createGroup('Hello World, $_barcode!');
   }
 
   void _createGroup(String name) {
@@ -98,17 +142,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<Null> _signIn() async {
-    await _ensureLoggedIn();
-    setState(() {
-      _signedIn = true;
-    });
+  _signOut() {
+    // TODO: signIn does not work after sign out...???
+    // to be more exact: googleSignIn.signIn() never finishes...
+    // flutter is still alpha! :-/
+    // this would actually be the right code: await googleSignIn.signOut();
+  }
+
+  _signIn() {
+    _ensureLoggedIn();
   }
 
   Future<Null> _ensureLoggedIn() async {
     GoogleSignInAccount user = googleSignIn.currentUser;
-    if (user == null) user = await googleSignIn.signInSilently();
-    if (user == null) await googleSignIn.signIn();
+    if (user == null) user = await googleSignIn.signIn();
+
     if (await auth.currentUser() == null) {
       GoogleSignInAuthentication credentials =
           await googleSignIn.currentUser.authentication;
@@ -139,7 +187,7 @@ class Group extends StatelessWidget {
               margin: const EdgeInsets.only(right: 16.0),
               child: new CircleAvatar(
                   backgroundImage:
-                  new NetworkImage(snapshot.value['ownerPhotoUrl'])),
+                      new NetworkImage(snapshot.value['ownerPhotoUrl'])),
             ),
             new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,4 +206,3 @@ class Group extends StatelessWidget {
     );
   }
 }
-
