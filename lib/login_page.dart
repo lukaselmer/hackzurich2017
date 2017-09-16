@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/start_page.dart';
 
@@ -109,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
+    await afterLogin(firebaseUser.email, firebaseUser.photoUrl);
     await Navigator.push(
         context, StartPage.createRoute(context, "Start Page", firebaseUser));
   }

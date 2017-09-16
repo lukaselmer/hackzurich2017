@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:core';
 
 import 'package:hackzurich2017/firebase_helper.dart';
 
-Future<Null> afterLogin(String emailHash, String imageUrl) async {
-  final user = (await db().child("users/emailHash").once()).value;
+Future<Null> afterLogin(String email, String imageUrl) async {
+  final emailHash = _emailHash(email);
+  final user = (await db().child("users/${emailHash}").once()).value;
   if (user != null) return null;
 
   final groupId = await _createGroup(emailHash, imageUrl);
-  await _createUser(user["imageUrl"], emailHash, groupId);
+  await _createUser(imageUrl, emailHash, groupId);
 }
 
 Future<String> _createGroup(emailHash, imageUrl) async {
@@ -22,7 +25,8 @@ Future<Null> _createUser(String imageUrl, String emailHash, String groupId) {
       .set({"group": emailHash, "imageUrl": imageUrl});
 }
 
-Future<Null> addUser(String groupId, String emailHash) async {
+Future<Null> addUser(String groupId, String email) async {
+  final emailHash = _emailHash(email);
   final user = (await db().child("users/${emailHash}").once()).value;
   if (user == null) return;
   await _setGroupOfUser(groupId, emailHash);
@@ -42,8 +46,12 @@ Future<bool> isExcludedBarcode(String groupId, String barcode) async {
 }
 
 Future<Null> addToExcluded(
-    String groupId, String barcode, String emailHash, String imageUrl) {
+    String groupId, String barcode, String email, String imageUrl) {
   return db()
-      .child("excludelist/${groupId}/${barcode}/${emailHash}")
+      .child("excludelist/${groupId}/${barcode}/${_emailHash(email)}")
       .set(imageUrl);
+}
+
+String _emailHash(String email) {
+  return BASE64.encode(email.codeUnits).replaceAll(new RegExp('[/]'), 'slash');
 }
