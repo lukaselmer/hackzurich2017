@@ -47,12 +47,12 @@ class _StartPageState extends State<StartPage> {
             new Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: new RaisedButton(
-                  onPressed: _scanBarcode, child: new Text("SCANN")),
+                  onPressed: _scanBarcode, child: new Text("SCAN")),
             ),
             new Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: new RaisedButton(
-                  onPressed: _navigateToAddGroup, child: new Text("GROUP")),
+                  onPressed: _navigateToAddGroup, child: new Text("ADD MEMBER")),
             ),
             new Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,6 +118,6 @@ class _StartPageState extends State<StartPage> {
   }
 
   _navigateToAddGroup() async {
-    await Navigator.push(context, GroupPage.createRoute(context));
+    await Navigator.push(context, GroupPage.createRoute(context, firebaseUser));
   }
 }
