@@ -51,7 +51,7 @@ Future<Null> _addUserToGroup(String groupId, String emailHash, imageUrl) async {
 }
 
 Future<bool> isExcludedBarcode(String groupId, String barcode) async {
-  return (await db().child("excludelist/${groupId}/${barcode}").once()) == null;
+  return (await db().child("excludelist/${groupId}/${barcode}").once()) != null;
 }
 
 Future<Null> addToExcluded(
@@ -60,8 +60,6 @@ Future<Null> addToExcluded(
       .child("excludelist/${groupId}/${barcode}/${_emailHash(email)}")
       .set(imageUrl);
 }
-
-testFunc() {}
 
 String _emailHash(String email) {
   return BASE64
