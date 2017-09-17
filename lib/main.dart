@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hackzurich2017/login_page.dart';
 
 main() async {
-  await FirebaseDatabase.instance.setPersistenceEnabled(true);
+  await FirebaseDatabase.instance.setPersistenceEnabled(false);
   runApp(new MyApp());
 }
 
