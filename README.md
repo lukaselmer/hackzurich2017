@@ -15,3 +15,7 @@ contains the core business rules.
 ## UI
 
 The UI is implemented in flutter using reactive views.
+
+## Screenshots
+
+https://github.com/lukaselmer/hackzurich2017/tree/master/screenshots
