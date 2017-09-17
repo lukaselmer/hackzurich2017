@@ -48,10 +48,10 @@ class _StartPageState extends State<StartPage> {
         title: new Text(title),
       ),
       body: new Container(
-          padding: const EdgeInsets.only(
-              top: 8.0, left: 16.0, right: 16.0, bottom: 8.0),
-          child: new Center(
-              child: new Column(children: [
+        padding: const EdgeInsets.only(
+            top: 8.0, left: 16.0, right: 16.0, bottom: 8.0),
+        child: new Center(
+          child: new Column(children: [
             new Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: new RaisedButton(
@@ -60,8 +60,9 @@ class _StartPageState extends State<StartPage> {
             new Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: new RaisedButton(
-                  onPressed: _navigateToAddGroup,
-                  child: new Text("ADD MEMBER")),
+                onPressed: _navigateToAddGroup,
+                child: new Text("ADD MEMBER"),
+              ),
             ),
             new Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,7 +73,9 @@ class _StartPageState extends State<StartPage> {
                 );
               }).toList(),
             )
-          ]))),
+          ]),
+        ),
+      ),
     );
   }
 
