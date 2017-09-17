@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
-import 'package:hackzurich2017/start_page.dart';
 
 final _auth = FirebaseAuth.instance;
 
@@ -90,7 +89,9 @@ class _InfoPageState extends State<InfoPage> {
 
   _navigateToStartPage() async {
     var firebaseUser = await _auth.currentUser();
-    await Navigator.push(
-        context, StartPage.createRoute(context, "Start Page", firebaseUser));
+//    await Navigator.push(
+//        context, StartPage.createRoute(context, "Start Page", firebaseUser));
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 }

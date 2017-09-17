@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: new Center(
         child: new Column(
           children: [
+            new MaterialButton(onPressed: testFunc, child: new Text('Test2')),
             new Padding(
               padding: const EdgeInsets.only(top: 32.0),
               child: new Image.asset(
@@ -135,8 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    await afterLogin(firebaseUser.email, firebaseUser.photoUrl);
-    await Navigator.push(
-        context, StartPage.createRoute(context, "Start Page", firebaseUser));
+    final groupId = await afterLogin(firebaseUser.email, firebaseUser.photoUrl);
+    await Navigator.push(context,
+        StartPage.createRoute(context, "Start Page", groupId, firebaseUser));
   }
 }

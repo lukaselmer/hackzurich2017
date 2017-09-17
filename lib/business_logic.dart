@@ -5,13 +5,14 @@ import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
-Future<Null> afterLogin(String email, String imageUrl) async {
+Future<String> afterLogin(String email, String imageUrl) async {
   final emailHash = _emailHash(email);
   final user = (await db().child("users/${emailHash}").once()).value;
   if (user != null) return null;
 
   final groupId = await _createGroup(emailHash, imageUrl);
   await _createUser(imageUrl, emailHash, groupId);
+  return groupId;
 }
 
 Future<String> _createGroup(emailHash, imageUrl) async {
@@ -26,14 +27,14 @@ Future<Null> _createUser(String imageUrl, String emailHash, String groupId) {
       .set({"group": groupId, "imageUrl": imageUrl});
 }
 
-Future<bool> addEmailToMyGroup(FirebaseUser _firebaseUser, String email) async {
-  var myEmailHash = _emailHash(_firebaseUser.email);
-  String groupId =
-      (await db().child("users/${myEmailHash}/group").once()).value;
-  return await _addUser(groupId, email);
-}
+//Future<bool> addEmailToMyGroup(FirebaseUser _firebaseUser, String email) async {
+//  var myEmailHash = _emailHash(_firebaseUser.email);
+//  String groupId =
+//      (await db().child("users/${myEmailHash}/group").once()).value;
+//  return await _addUser(groupId, email);
+//}
 
-Future<bool> _addUser(String groupId, String email) async {
+Future<bool> addUser(String groupId, String email) async {
   final emailHash = _emailHash(email);
   final user = (await db().child("users/${emailHash}").once()).value;
   if (user == null) return false;
