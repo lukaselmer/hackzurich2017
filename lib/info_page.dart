@@ -1,22 +1,24 @@
 import 'package:barcodescanner/barcodescanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/utils.dart';
 
 class InfoPage extends StatefulWidget {
-
   static MaterialPageRoute createRoute(BuildContext context, bool excludedInfo,
       String groupId, FirebaseUser currentUser, String itemId) {
     return new MaterialPageRoute(
         builder: (BuildContext context) => new InfoPage(
             excludedInfo: excludedInfo,
             groupId: groupId,
-            currentUser: currentUser, itemId: itemId));
+            currentUser: currentUser,
+            itemId: itemId));
   }
 
-  InfoPage({Key key, this.excludedInfo, this.groupId, this.currentUser, this.itemId})
+  InfoPage(
+      {Key key, this.excludedInfo, this.groupId, this.currentUser, this.itemId})
       : super(key: key);
   final String itemId;
   final FirebaseUser currentUser;
@@ -26,13 +28,24 @@ class InfoPage extends StatefulWidget {
   @override
   _InfoPageState createState() {
     return new _InfoPageState(
-        isExcluded: excludedInfo, groupId: groupId, currentUser: currentUser, itemId: itemId);
+        isExcluded: excludedInfo,
+        groupId: groupId,
+        currentUser: currentUser,
+        itemId: itemId);
   }
 }
 
 class _InfoPageState extends State<InfoPage> {
+  String text;
 
-  _InfoPageState({this.isExcluded, this.groupId, this.currentUser, this.itemId});
+  _InfoPageState(
+      {this.isExcluded, this.groupId, this.currentUser, this.itemId}) {
+    getTextFromBarcode(itemId).then((newText) {
+      setState(() {
+        text = newText;
+      });
+    });
+  }
 
   final String itemId;
   final FirebaseUser currentUser;
@@ -52,6 +65,7 @@ class _InfoPageState extends State<InfoPage> {
           child: new Column(
             children: [
               _getImage(),
+              _getInfos(),
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: new RaisedButton(
@@ -70,6 +84,21 @@ class _InfoPageState extends State<InfoPage> {
           ),
         ),
       ),
+    );
+  }
+
+  _getInfos() {
+    return new Center(
+      child: new Row(children: [
+        new Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: new Text("Name"),
+        ),
+        new Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: new Text(text),
+        )
+      ]),
     );
   }
 
@@ -103,7 +132,8 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   _dislikeProduct() async {
-    await addToExcluded(groupId, itemId, currentUser.email, currentUser.photoUrl);
+    await addToExcluded(
+        groupId, itemId, currentUser.email, currentUser.photoUrl);
     Navigator.pop(context);
   }
 }

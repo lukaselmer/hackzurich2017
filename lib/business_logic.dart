@@ -77,3 +77,19 @@ Future<List<String>> groupImages(String groupId) async {
 Stream<Event> groupsStream(String groupId) {
   return db().child('groups/${groupId}').onValue;
 }
+
+Future<String> getTextFromBarcode(itemId) async {
+  final body = (await db().child('barcodes/${itemId}').once()).value;
+  if (body == null) {
+    return null;
+  }
+
+  try {
+    String text = body['data']['0']['display_name_translations']['de'];
+    print(text);
+    return text;
+
+  } catch (error) {
+    return null;
+  }
+}
