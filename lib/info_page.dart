@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
+import 'package:hackzurich2017/utils.dart';
 
 class InfoPage extends StatefulWidget {
 
@@ -96,10 +97,9 @@ class _InfoPageState extends State<InfoPage> {
     barcodeData = await Barcodescanner.scanBarcode;
     String newItemId = barcodeData['barcode'];
     await items().child(newItemId).set(newItemId);
-    var itemSnapshot = await getInfoFor(newItemId);
+    // var itemSnapshot = await getInfoFor(newItemId);
     Navigator.pop(context);
-    Navigator.push(context,
-        InfoPage.createRoute(context, !isExcluded, groupId, currentUser, newItemId));
+    await handleBarcodeScan(context, groupId, currentUser, newItemId);
   }
 
   _dislikeProduct() async {

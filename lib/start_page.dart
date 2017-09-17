@@ -7,17 +7,19 @@ import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/group_page.dart';
 import 'package:hackzurich2017/info_page.dart';
+import 'package:hackzurich2017/utils.dart';
 
 class StartPage extends StatefulWidget {
   static MaterialPageRoute createRoute(BuildContext context, String title,
       String groupId, List<String> images, FirebaseUser user) {
     return new MaterialPageRoute(
-      builder: (BuildContext context) => new StartPage(
-            title: title,
-            groupId: groupId,
-            currentUser: user,
-            images: images,
-          ),
+      builder: (BuildContext context) =>
+      new StartPage(
+        title: title,
+        groupId: groupId,
+        currentUser: user,
+        images: images,
+      ),
     );
   }
 
@@ -29,8 +31,12 @@ class StartPage extends StatefulWidget {
   StartPage({this.title, this.groupId, this.currentUser, this.images});
 
   @override
-  _StartPageState createState() => new _StartPageState(
-      title: title, currentUser: currentUser, groupId: groupId, images: images);
+  _StartPageState createState() =>
+      new _StartPageState(
+          title: title,
+          currentUser: currentUser,
+          groupId: groupId,
+          images: images);
 }
 
 class _StartPageState extends State<StartPage> {
@@ -41,8 +47,8 @@ class _StartPageState extends State<StartPage> {
 
   _StartPageState({this.title, this.currentUser, this.groupId, this.images}) {
     groupsStream(groupId).listen((event) {
-      groupImages(groupId).then((newImages){
-        setState((){
+      groupImages(groupId).then((newImages) {
+        setState(() {
           images = newImages;
         });
       });
@@ -122,12 +128,9 @@ class _StartPageState extends State<StartPage> {
     barcodeData = await Barcodescanner.scanBarcode;
     String itemId = barcodeData['barcode'];
     await items().child(itemId).set(itemId);
+    await handleBarcodeScan(context, groupId, currentUser, itemId);
     // var excludedInfo = await getInfoFor(itemId);
-    var isExcluded = await isExcludedBarcode(groupId, itemId);
-    Navigator.push(
-        context,
-        InfoPage.createRoute(
-            context, isExcluded, groupId, currentUser, itemId));
+
   }
 
   _navigateToAddGroup() async {
