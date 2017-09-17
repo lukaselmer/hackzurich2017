@@ -6,20 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/group_page.dart';
-import 'package:hackzurich2017/info_page.dart';
 import 'package:hackzurich2017/utils.dart';
 
 class StartPage extends StatefulWidget {
   static MaterialPageRoute createRoute(BuildContext context, String title,
       String groupId, List<String> images, FirebaseUser user) {
     return new MaterialPageRoute(
-      builder: (BuildContext context) =>
-      new StartPage(
-        title: title,
-        groupId: groupId,
-        currentUser: user,
-        images: images,
-      ),
+      builder: (BuildContext context) => new StartPage(
+            title: title,
+            groupId: groupId,
+            currentUser: user,
+            images: images,
+          ),
     );
   }
 
@@ -31,12 +29,8 @@ class StartPage extends StatefulWidget {
   StartPage({this.title, this.groupId, this.currentUser, this.images});
 
   @override
-  _StartPageState createState() =>
-      new _StartPageState(
-          title: title,
-          currentUser: currentUser,
-          groupId: groupId,
-          images: images);
+  _StartPageState createState() => new _StartPageState(
+      title: title, currentUser: currentUser, groupId: groupId, images: images);
 }
 
 class _StartPageState extends State<StartPage> {
@@ -122,15 +116,19 @@ class _StartPageState extends State<StartPage> {
   }
 
   _scanBarcode() async {
-    Map<String, dynamic> barcodeData;
-    //barcodeData is a JSON (Map<String,dynamic>) like this:
-    //{barcode: '12345', barcodeFormat: 'ean-13'}
-    barcodeData = await Barcodescanner.scanBarcode;
-    String itemId = barcodeData['barcode'];
-    await items().child(itemId).set(itemId);
-    await handleBarcodeScan(context, groupId, currentUser, itemId);
-    // var excludedInfo = await getInfoFor(itemId);
-
+    try {
+      Map<String, dynamic> barcodeData;
+      //barcodeData is a JSON (Map<String,dynamic>) like this:
+      //{barcode: '12345', barcodeFormat: 'ean-13'}
+      barcodeData = await Barcodescanner.scanBarcode;
+      String itemId = barcodeData['barcode'];
+      if ((await items().child(itemId).once()).value == null)
+        await items().child(itemId).set(itemId);
+      await handleBarcodeScan(context, groupId, currentUser, itemId);
+      // var excludedInfo = await getInfoFor(itemId);
+    } catch (_) {
+      Navigator.pop(context);
+    }
   }
 
   _navigateToAddGroup() async {

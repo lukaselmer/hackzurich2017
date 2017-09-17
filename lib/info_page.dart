@@ -1,6 +1,5 @@
 import 'package:barcodescanner/barcodescanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
@@ -36,7 +35,7 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
-  String text;
+  String text = '';
 
   _InfoPageState(
       {this.isExcluded, this.groupId, this.currentUser, this.itemId}) {
@@ -123,12 +122,17 @@ class _InfoPageState extends State<InfoPage> {
     Map<String, dynamic> barcodeData;
     //barcodeData is a JSON (Map<String,dynamic>) like this:
     //{barcode: '12345', barcodeFormat: 'ean-13'}
-    barcodeData = await Barcodescanner.scanBarcode;
-    String newItemId = barcodeData['barcode'];
-    await items().child(newItemId).set(newItemId);
-    // var itemSnapshot = await getInfoFor(newItemId);
-    Navigator.pop(context);
-    await handleBarcodeScan(context, groupId, currentUser, newItemId);
+    try {
+      barcodeData = await Barcodescanner.scanBarcode;
+      String newItemId = barcodeData['barcode'];
+      if ((await items().child(newItemId).once()).value == null)
+        await items().child(newItemId).set(newItemId);
+      // var itemSnapshot = await getInfoFor(newItemId);
+      Navigator.pop(context);
+      await handleBarcodeScan(context, groupId, currentUser, newItemId);
+    } catch (_) {
+      Navigator.pop(context);
+    }
   }
 
   _dislikeProduct() async {
