@@ -66,3 +66,8 @@ String _emailHash(String email) {
       .encode(email.toLowerCase().codeUnits)
       .replaceAll(new RegExp('[/]'), 'slash');
 }
+
+Future<List<String>> groupImages(String groupId) async {
+  final map = (await db().child('groups/${groupId}').once()).value;
+  return map.values.toList();
+}

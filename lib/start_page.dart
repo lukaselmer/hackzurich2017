@@ -9,13 +9,14 @@ import 'package:hackzurich2017/group_page.dart';
 import 'package:hackzurich2017/info_page.dart';
 
 class StartPage extends StatefulWidget {
-  static MaterialPageRoute createRoute(
-      BuildContext context, String title, String groupId, FirebaseUser user) {
+  static MaterialPageRoute createRoute(BuildContext context, String title,
+      String groupId, List<String> images, FirebaseUser user) {
     return new MaterialPageRoute(
       builder: (BuildContext context) => new StartPage(
             title: title,
             groupId: groupId,
             currentUser: user,
+            images: images,
           ),
     );
   }
@@ -23,20 +24,22 @@ class StartPage extends StatefulWidget {
   final String title;
   final String groupId;
   final FirebaseUser currentUser;
+  final List<String> images;
 
-  StartPage({this.title, this.groupId, this.currentUser});
+  StartPage({this.title, this.groupId, this.currentUser, this.images});
 
   @override
   _StartPageState createState() => new _StartPageState(
-      title: title, currentUser: currentUser, groupId: groupId);
+      title: title, currentUser: currentUser, groupId: groupId, images: images);
 }
 
 class _StartPageState extends State<StartPage> {
   final String title;
   FirebaseUser currentUser;
   final String groupId;
+  final List<String> images;
 
-  _StartPageState({this.title, this.currentUser, this.groupId});
+  _StartPageState({this.title, this.currentUser, this.groupId, this.images});
 
   @override
   Widget build(BuildContext context) {
@@ -62,23 +65,12 @@ class _StartPageState extends State<StartPage> {
             ),
             new Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                new CircleAvatar(
+              children: images.map((url) {
+                return new CircleAvatar(
                   radius: 25.0,
-                  backgroundImage:
-                      new NetworkImage("http://loremflickr.com/320/320/girl"),
-                ),
-                new CircleAvatar(
-                  radius: 25.0,
-                  backgroundImage:
-                      new NetworkImage("http://loremflickr.com/320/320/boy"),
-                ),
-                new CircleAvatar(
-                  radius: 25.0,
-                  backgroundImage:
-                      new NetworkImage("http://loremflickr.com/320/320/dog"),
-                )
-              ],
+                  backgroundImage: new NetworkImage(url),
+                );
+              }).toList(),
             )
           ]))),
     );
@@ -121,8 +113,10 @@ class _StartPageState extends State<StartPage> {
     await items().child(itemId).set(itemId);
     // var excludedInfo = await getInfoFor(itemId);
     var isExcluded = await isExcludedBarcode(groupId, itemId);
-    Navigator.push(context,
-        InfoPage.createRoute(context, isExcluded, groupId, currentUser, itemId));
+    Navigator.push(
+        context,
+        InfoPage.createRoute(
+            context, isExcluded, groupId, currentUser, itemId));
   }
 
   _navigateToAddGroup() async {
