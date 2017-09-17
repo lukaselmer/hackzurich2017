@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
 Future<Null> afterLogin(String email, String imageUrl) async {
@@ -25,12 +26,20 @@ Future<Null> _createUser(String imageUrl, String emailHash, String groupId) {
       .set({"group": groupId, "imageUrl": imageUrl});
 }
 
-Future<Null> addUser(String groupId, String email) async {
+Future<bool> addEmailToMyGroup(FirebaseUser _firebaseUser, String email) async {
+  var myEmailHash = _emailHash(_firebaseUser.email);
+  String groupId =
+      (await db().child("users/${myEmailHash}/group").once()).value;
+  return await _addUser(groupId, email);
+}
+
+Future<bool> _addUser(String groupId, String email) async {
   final emailHash = _emailHash(email);
   final user = (await db().child("users/${emailHash}").once()).value;
-  if (user == null) return;
+  if (user == null) return false;
   await _setGroupOfUser(groupId, emailHash);
   await _addUserToGroup(groupId, emailHash, user['imageUrl']);
+  return true;
 }
 
 Future<Null> _setGroupOfUser(String groupId, String emailHash) async {
@@ -51,6 +60,8 @@ Future<Null> addToExcluded(
       .child("excludelist/${groupId}/${barcode}/${_emailHash(email)}")
       .set(imageUrl);
 }
+
+testFunc() {}
 
 String _emailHash(String email) {
   return BASE64.encode(email.codeUnits).replaceAll(new RegExp('[/]'), 'slash');
