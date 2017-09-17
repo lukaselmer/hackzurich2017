@@ -66,7 +66,7 @@ class _StartPageState extends State<StartPage> {
                   onPressed: _scanBarcode, child: new Text("SCAN")),
             ),
             new Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.only(bottom: 20.0),
               child: new RaisedButton(
                 onPressed: _navigateToAddGroup,
                 child: new Text("ADD MEMBER"),
@@ -80,7 +80,67 @@ class _StartPageState extends State<StartPage> {
                   backgroundImage: new NetworkImage(url),
                 );
               }).toList(),
-            )
+            ),
+            new Padding(
+              child: new Text('Group Favorites',
+                  style: new TextStyle(fontSize: 20.0, color: Colors.accents[4])),
+              padding: const EdgeInsets.only(top: 30.0, bottom: 15.0),
+            ),
+            new Padding(
+              child: new Text('Green Vegetables',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Quinoa',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Tofu',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Salad',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Sweet Patatoes',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Chocolate',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Organic Food',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Unwished',
+                  style: new TextStyle(fontSize: 20.0, color: Colors.accents[0])),
+              padding: const EdgeInsets.only(top: 30.0, bottom: 15.0),
+            ),
+            new Padding(
+              child: new Text('Meat',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Bread',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
+            new Padding(
+              child: new Text('Non Saturated Fats',
+                  style: new TextStyle(fontSize: 15.0)),
+              padding: const EdgeInsets.only(bottom: 6.0),
+            ),
           ]),
         ),
       ),
