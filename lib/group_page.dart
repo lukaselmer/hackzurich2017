@@ -36,7 +36,7 @@ class _GroupPageState extends State<GroupPage> {
       body: new Container(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: new TextField(
-          decoration: new InputDecoration(hintText: "E-Mail"),
+          decoration: new InputDecoration(hintText: "E-Mail", helperText: "christof.buechi@gmail.com"),
           onSubmitted: (String str) {
             setState(() {
               email = str;

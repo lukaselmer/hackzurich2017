@@ -55,7 +55,7 @@ class _InfoPageState extends State<InfoPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: new RaisedButton(
                   onPressed: _scanBarcode,
-                  child: new Text("Scann again"),
+                  child: new Text("Scan again"),
                 ),
               ),
               new Padding(
@@ -98,7 +98,6 @@ class _InfoPageState extends State<InfoPage> {
     await items().child(newItemId).set(newItemId);
     var itemSnapshot = await getInfoFor(newItemId);
     Navigator.pop(context);
-    // TODO: replace false with real stuff
     Navigator.push(context,
         InfoPage.createRoute(context, !isExcluded, groupId, currentUser, newItemId));
   }
