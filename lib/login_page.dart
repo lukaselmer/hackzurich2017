@@ -28,11 +28,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final String title;
 
   _MyHomePageState({this.title});
-  @override
-  void initState() {
-    super.initState();
-    _googleSignIn.signInSilently();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,30 +102,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> _ensureLoggedIn() async {
+    // This is really messy. It seems that we do not know how to use it, or
+    // there is still a bug. See:
+    // * https://github.com/flutter/plugins/pull/94
+    // * https://github.com/flutter/flutter/issues/10552
     GoogleSignInAccount googleUser = _googleSignIn.currentUser;
-    print("a-----------------");
-//      if (user == null) user = await _googleSignIn.signInSilently();
-    print(googleUser);
-    print("b-----------------");
     try {
-      if (googleUser == null) googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) googleUser = await _googleSignIn.signInSilently();
     } catch (error) {
-    print("second error");
+      print("first error");
       print(error);
     }
-    print(googleUser);
-    print("c-----------------");
+    try {
+      if (googleUser == null) googleUser = await _googleSignIn.signIn();
+      print("logged in as ${googleUser}");
+    } catch (error) {
+      print("second error");
+      print(error);
+    }
 
-    if(googleUser == null){
+    if (googleUser == null) {
       print("Error signing in google user!");
       return;
     }
 
     FirebaseUser firebaseUser = await _auth.currentUser();
     if (await _auth.currentUser() == null) {
-      GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
-      // await _googleSignIn.currentUser.authentication;
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       firebaseUser = await _auth.signInWithGoogle(
         idToken: googleAuth.idToken,
         accessToken: googleAuth.accessToken,
