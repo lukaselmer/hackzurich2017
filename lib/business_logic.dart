@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
 Future<String> afterLogin(String email, String imageUrl) async {
@@ -70,4 +71,8 @@ String _emailHash(String email) {
 Future<List<String>> groupImages(String groupId) async {
   final map = (await db().child('groups/${groupId}').once()).value;
   return map.values.toList();
+}
+
+Stream<Event> groupsStream(String groupId) {
+  return db().child('groups/${groupId}').onValue;
 }

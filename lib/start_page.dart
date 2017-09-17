@@ -37,9 +37,17 @@ class _StartPageState extends State<StartPage> {
   final String title;
   FirebaseUser currentUser;
   final String groupId;
-  final List<String> images;
+  List<String> images;
 
-  _StartPageState({this.title, this.currentUser, this.groupId, this.images});
+  _StartPageState({this.title, this.currentUser, this.groupId, this.images}) {
+    groupsStream(groupId).listen((event) {
+      groupImages(groupId).then((newImages){
+        setState((){
+          images = newImages;
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
