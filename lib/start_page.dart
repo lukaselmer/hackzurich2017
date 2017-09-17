@@ -121,7 +121,8 @@ class _StartPageState extends State<StartPage> {
     await items().child(itemId).set(itemId);
     // var excludedInfo = await getInfoFor(itemId);
     var isExcluded = await isExcludedBarcode(groupId, itemId);
-    Navigator.push(context, InfoPage.createRoute(context, isExcluded, groupId));
+    Navigator.push(context,
+        InfoPage.createRoute(context, isExcluded, groupId, currentUser, itemId));
   }
 
   _navigateToAddGroup() async {

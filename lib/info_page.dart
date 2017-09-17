@@ -1,28 +1,40 @@
 import 'package:barcodescanner/barcodescanner.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
 class InfoPage extends StatefulWidget {
-  static MaterialPageRoute createRoute(
-      BuildContext context, bool excludedInfo, String groupId) {
+
+  static MaterialPageRoute createRoute(BuildContext context, bool excludedInfo,
+      String groupId, FirebaseUser currentUser, String itemId) {
     return new MaterialPageRoute(
-        builder: (BuildContext context) =>
-            new InfoPage(excludedInfo: excludedInfo, groupId: groupId));
+        builder: (BuildContext context) => new InfoPage(
+            excludedInfo: excludedInfo,
+            groupId: groupId,
+            currentUser: currentUser, itemId: itemId));
   }
 
-  InfoPage({Key key, this.excludedInfo, this.groupId}) : super(key: key);
+  InfoPage({Key key, this.excludedInfo, this.groupId, this.currentUser, this.itemId})
+      : super(key: key);
+  final String itemId;
+  final FirebaseUser currentUser;
   final bool excludedInfo;
   final String groupId;
 
   @override
   _InfoPageState createState() {
-    return new _InfoPageState(isExcluded: excludedInfo, groupId: groupId);
+    return new _InfoPageState(
+        isExcluded: excludedInfo, groupId: groupId, currentUser: currentUser, itemId: itemId);
   }
 }
 
 class _InfoPageState extends State<InfoPage> {
-  _InfoPageState({this.isExcluded, this.groupId});
 
+  _InfoPageState({this.isExcluded, this.groupId, this.currentUser, this.itemId});
+
+  final String itemId;
+  final FirebaseUser currentUser;
   final bool isExcluded;
   final String groupId;
 
@@ -82,16 +94,17 @@ class _InfoPageState extends State<InfoPage> {
     //barcodeData is a JSON (Map<String,dynamic>) like this:
     //{barcode: '12345', barcodeFormat: 'ean-13'}
     barcodeData = await Barcodescanner.scanBarcode;
-    String itemId = barcodeData['barcode'];
-    await items().child(itemId).set(itemId);
-    var itemSnapshot = await getInfoFor(itemId);
+    String newItemId = barcodeData['barcode'];
+    await items().child(newItemId).set(newItemId);
+    var itemSnapshot = await getInfoFor(newItemId);
     Navigator.pop(context);
     // TODO: replace false with real stuff
-    Navigator.push(context, InfoPage.createRoute(context, !isExcluded, groupId));
+    Navigator.push(context,
+        InfoPage.createRoute(context, !isExcluded, groupId, currentUser, newItemId));
   }
 
   _dislikeProduct() async {
-    // TODO: addToExcluded(_groupId)
+    await addToExcluded(groupId, itemId, currentUser.email, currentUser.photoUrl);
     Navigator.pop(context);
   }
 }
