@@ -24,7 +24,17 @@ class _GroupPageState extends State<GroupPage> {
   FirebaseUser _firebaseUser;
   String _groupId;
 
+  TextEditingController _controller;
+
   _GroupPageState(this._firebaseUser, this._groupId);
+
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = new TextEditingController(text: 'christof.buechi@gmail.com');
+  }
+
 
   // TODO: add UI submit button
   @override
@@ -36,7 +46,7 @@ class _GroupPageState extends State<GroupPage> {
       body: new Container(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: new TextField(
-          decoration: new InputDecoration(hintText: "E-Mail", helperText: "christof.buechi@gmail.com"),
+          controller: _controller,
           onSubmitted: (String str) {
             setState(() {
               email = str;
