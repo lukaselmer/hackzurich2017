@@ -79,17 +79,8 @@ Stream<Event> groupsStream(String groupId) {
 }
 
 Future<String> getTextFromBarcode(itemId) async {
-  final body = (await db().child('barcodes/${itemId}').once()).value;
-  if (body == null) {
-    return null;
-  }
-
-  try {
-    String text = body['data']['0']['display_name_translations']['de'];
-    print(text);
-    return text;
-
-  } catch (error) {
-    return null;
-  }
+  final path = 'barcodes/$itemId/body/data/0/display_name_translations/de';
+  final text = (await db().child(path).once()).value;
+  if (text == null || text.runtimeType.toString() != "String") return '';
+  return text;
 }
