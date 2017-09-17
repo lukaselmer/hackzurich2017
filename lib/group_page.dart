@@ -4,25 +4,27 @@ import 'package:hackzurich2017/business_logic.dart';
 
 class GroupPage extends StatefulWidget {
   FirebaseUser _firebaseUser;
+  String _groupId;
 
-  GroupPage(this._firebaseUser);
+  GroupPage(this._firebaseUser, this._groupId);
 
   static MaterialPageRoute createRoute(
-      BuildContext context, FirebaseUser firebaseUser) {
+      BuildContext context, FirebaseUser firebaseUser, String groupId) {
     return new MaterialPageRoute(
-        builder: (BuildContext context) => new GroupPage(firebaseUser));
+        builder: (BuildContext context) => new GroupPage(firebaseUser, groupId));
   }
 
   @override
-  _GroupPageState createState() => new _GroupPageState(_firebaseUser);
+  _GroupPageState createState() => new _GroupPageState(_firebaseUser, _groupId);
 }
 
 class _GroupPageState extends State<GroupPage> {
   String email = "";
 
   FirebaseUser _firebaseUser;
+  String _groupId;
 
-  _GroupPageState(this._firebaseUser);
+  _GroupPageState(this._firebaseUser, this._groupId);
 
   // TODO: add UI submit button
   @override
@@ -39,7 +41,7 @@ class _GroupPageState extends State<GroupPage> {
             setState(() {
               email = str;
             });
-            addEmailToMyGroup(_firebaseUser, email).then((found) {
+            addUser(_groupId, email).then((found) {
               if (found) return Navigator.pop(context);
               // if (found) return Navigator.of(context).pop();
             });

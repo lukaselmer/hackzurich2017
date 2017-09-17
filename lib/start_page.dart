@@ -9,29 +9,33 @@ import 'package:hackzurich2017/info_page.dart';
 
 class StartPage extends StatefulWidget {
   static MaterialPageRoute createRoute(
-      BuildContext context, String title, FirebaseUser user) {
+      BuildContext context, String title, String groupId, FirebaseUser user) {
     return new MaterialPageRoute(
-        builder: (BuildContext context) => new StartPage(
-              title: title,
-              currentUser: user,
-            ));
+      builder: (BuildContext context) => new StartPage(
+            title: title,
+            groupId: groupId,
+            currentUser: user,
+          ),
+    );
   }
 
   final String title;
-  FirebaseUser currentUser;
+  final String groupId;
+  final FirebaseUser currentUser;
 
-  StartPage({this.title, this.currentUser});
+  StartPage({this.title, this.groupId, this.currentUser});
 
   @override
-  _StartPageState createState() =>
-      new _StartPageState(title: title, currentUser: currentUser);
+  _StartPageState createState() => new _StartPageState(
+      title: title, currentUser: currentUser, groupId: groupId);
 }
 
 class _StartPageState extends State<StartPage> {
   final String title;
   FirebaseUser currentUser;
+  final String groupId;
 
-  _StartPageState({this.title, this.currentUser});
+  _StartPageState({this.title, this.currentUser, this.groupId});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,8 @@ class _StartPageState extends State<StartPage> {
             new Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: new RaisedButton(
-                  onPressed: _navigateToAddGroup, child: new Text("ADD MEMBER")),
+                  onPressed: _navigateToAddGroup,
+                  child: new Text("ADD MEMBER")),
             ),
             new Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,6 +123,6 @@ class _StartPageState extends State<StartPage> {
   }
 
   _navigateToAddGroup() async {
-    await Navigator.push(context, GroupPage.createRoute(context, firebaseUser));
+    await Navigator.push(context, GroupPage.createRoute(context, currentUser, groupId));
   }
 }
