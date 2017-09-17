@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:barcodescanner/barcodescanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackzurich2017/business_logic.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/group_page.dart';
 import 'package:hackzurich2017/info_page.dart';
@@ -118,11 +119,13 @@ class _StartPageState extends State<StartPage> {
     barcodeData = await Barcodescanner.scanBarcode;
     String itemId = barcodeData['barcode'];
     await items().child(itemId).set(itemId);
-    var itemSnapshot = await getInfoFor(itemId);
-    Navigator.push(context, InfoPage.createRoute(context, itemSnapshot));
+    // var excludedInfo = await getInfoFor(itemId);
+    var isExcluded = await isExcludedBarcode(groupId, itemId);
+    Navigator.push(context, InfoPage.createRoute(context, isExcluded, groupId));
   }
 
   _navigateToAddGroup() async {
-    await Navigator.push(context, GroupPage.createRoute(context, currentUser, groupId));
+    await Navigator.push(
+        context, GroupPage.createRoute(context, currentUser, groupId));
   }
 }

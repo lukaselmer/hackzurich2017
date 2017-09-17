@@ -1,31 +1,30 @@
 import 'package:barcodescanner/barcodescanner.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
-final _auth = FirebaseAuth.instance;
-
 class InfoPage extends StatefulWidget {
   static MaterialPageRoute createRoute(
-      BuildContext context, DataSnapshot snapshot) {
+      BuildContext context, bool excludedInfo, String groupId) {
     return new MaterialPageRoute(
-        builder: (BuildContext context) => new InfoPage(snapshot: snapshot));
+        builder: (BuildContext context) =>
+            new InfoPage(excludedInfo: excludedInfo, groupId: groupId));
   }
 
-  InfoPage({Key key, this.snapshot}) : super(key: key);
-  final DataSnapshot snapshot;
+  InfoPage({Key key, this.excludedInfo, this.groupId}) : super(key: key);
+  final bool excludedInfo;
+  final String groupId;
 
   @override
   _InfoPageState createState() {
-    return new _InfoPageState(snapshot: snapshot);
+    return new _InfoPageState(isExcluded: excludedInfo, groupId: groupId);
   }
 }
 
 class _InfoPageState extends State<InfoPage> {
-  _InfoPageState({this.snapshot});
+  _InfoPageState({this.isExcluded, this.groupId});
 
-  final DataSnapshot snapshot;
+  final bool isExcluded;
+  final String groupId;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class _InfoPageState extends State<InfoPage> {
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: new RaisedButton(
-                  onPressed: _navigateToStartPage,
+                  onPressed: _dislikeProduct,
                   child: new Text("I DON'T LIKE IT"),
                 ),
               )
@@ -62,9 +61,11 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   Widget _getImage() {
-    print(snapshot.value);
-    // new Icons(Icons.thumbs_up_down, size: 250.0, color: Colors.red[700]);
+    // print(snapshot.value);
+    if (isExcluded)
+      return new Icon(Icons.thumb_down, size: 250.0, color: Colors.red[700]);
     return new Icon(Icons.thumb_up, size: 250.0, color: Colors.green[700]);
+
     /* var sugarValue = snapshot.value['body'];//['data'][0]['nutrients']['sugars']['per_hundred'];
     var sugar = double.parse(sugarValue);
     if(sugar <= 10.0) {
@@ -84,14 +85,13 @@ class _InfoPageState extends State<InfoPage> {
     String itemId = barcodeData['barcode'];
     await items().child(itemId).set(itemId);
     var itemSnapshot = await getInfoFor(itemId);
-    Navigator.push(context, InfoPage.createRoute(context, itemSnapshot));
+    Navigator.pop(context);
+    // TODO: replace false with real stuff
+    Navigator.push(context, InfoPage.createRoute(context, !isExcluded, groupId));
   }
 
-  _navigateToStartPage() async {
-    var firebaseUser = await _auth.currentUser();
-//    await Navigator.push(
-//        context, StartPage.createRoute(context, "Start Page", firebaseUser));
-    Navigator.pop(context);
+  _dislikeProduct() async {
+    // TODO: addToExcluded(_groupId)
     Navigator.pop(context);
   }
 }
