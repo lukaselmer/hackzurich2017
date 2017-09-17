@@ -55,7 +55,7 @@ class _InfoPageState extends State<InfoPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Item Infos"),
+        title: new Text("And your result is..."),
       ),
       body: new Center(
         child: new Padding(
@@ -63,20 +63,28 @@ class _InfoPageState extends State<InfoPage> {
               top: 32.0, left: 64.0, right: 64.0, bottom: 32.0),
           child: new Column(
             children: [
+              _getImageAlt(),
               _getImage(),
               _getInfos(),
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: new RaisedButton(
                   onPressed: _scanBarcode,
-                  child: new Text("Scan again"),
+                  child: new Text("SCAN NEXT"),
                 ),
               ),
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: new RaisedButton(
                   onPressed: _dislikeProduct,
-                  child: new Text("I DON'T LIKE IT"),
+                  child: new Text("PLEASE DON'T BUY IT 💔"),
+                ),
+              ),
+              new Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new RaisedButton(
+                  onPressed: _dislikeProduct,
+                  child: new Text("PLEASE BUY THIS 😍"),
                 ),
               )
             ],
@@ -88,16 +96,7 @@ class _InfoPageState extends State<InfoPage> {
 
   _getInfos() {
     return new Center(
-      child: new Row(children: [
-        new Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: new Text("Name"),
-        ),
-        new Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: new Text(text),
-        )
-      ]),
+      child: new Text(text),
     );
   }
 
@@ -106,6 +105,28 @@ class _InfoPageState extends State<InfoPage> {
     if (isExcluded)
       return new Icon(Icons.thumb_down, size: 250.0, color: Colors.red[700]);
     return new Icon(Icons.thumb_up, size: 250.0, color: Colors.green[700]);
+
+    /* var sugarValue = snapshot.value['body'];//['data'][0]['nutrients']['sugars']['per_hundred'];
+    var sugar = double.parse(sugarValue);
+    if(sugar <= 10.0) {
+      return new Image.asset("images/ic_good.png");
+    } else if(sugar > 10.0 && sugar < 40.0 ) {
+      return new Image.asset("images/ic_not_so_good.png");
+    } else{
+      return
+    }*/
+  }
+
+  Widget _getImageAlt() {
+    if (isExcluded)
+      return new Text(
+        'Someone does not like this product 😢',
+        style: new TextStyle(fontSize: 22.0),
+        textAlign: TextAlign.center,
+      );
+    return new Text('Yay, everyone likes this! 😃',
+      style: new TextStyle(fontSize: 22.0),
+      textAlign: TextAlign.center);
 
     /* var sugarValue = snapshot.value['body'];//['data'][0]['nutrients']['sugars']['per_hundred'];
     var sugar = double.parse(sugarValue);
