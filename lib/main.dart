@@ -16,12 +16,12 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Conshop',
+      title: 'FoodWish',
       theme: new ThemeData(
         primarySwatch: Colors.green,
       ),
       routes: <String, WidgetBuilder>{
-        "/": (BuildContext context) => new MyHomePage(title: 'Conshop'),
+        "/": (BuildContext context) => new MyHomePage(title: 'FoodWish'),
       },
     );
   }
