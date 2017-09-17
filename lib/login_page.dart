@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hackzurich2017/business_logic.dart';
-import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/start_page.dart';
 
 final _googleSignIn = new GoogleSignIn(
@@ -12,6 +11,7 @@ final _googleSignIn = new GoogleSignIn(
     'email',
   ],
 );
+final _auth = FirebaseAuth.instance;
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -107,27 +107,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> _ensureLoggedIn() async {
-    GoogleSignInAccount user = _googleSignIn.currentUser;
+    GoogleSignInAccount googleUser = _googleSignIn.currentUser;
     print("a-----------------");
 //      if (user == null) user = await _googleSignIn.signInSilently();
-    print(user);
+    print(googleUser);
     print("b-----------------");
     try {
-      if (user == null) user = await _googleSignIn.signIn();
+      if (googleUser == null) googleUser = await _googleSignIn.signIn();
     } catch (error) {
     print("second error");
       print(error);
     }
-    print(user);
+    print(googleUser);
     print("c-----------------");
 
-    FirebaseUser firebaseUser = await auth.currentUser();
-    if (await auth.currentUser() == null) {
-      GoogleSignInAuthentication credentials =
-      await _googleSignIn.currentUser.authentication;
-      firebaseUser = await auth.signInWithGoogle(
-        idToken: credentials.idToken,
-        accessToken: credentials.accessToken,
+    if(googleUser == null){
+      print("Error signing in google user!");
+      return;
+    }
+
+    FirebaseUser firebaseUser = await _auth.currentUser();
+    if (await _auth.currentUser() == null) {
+      GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+      // await _googleSignIn.currentUser.authentication;
+      firebaseUser = await _auth.signInWithGoogle(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
       );
     }
 

@@ -1,8 +1,11 @@
 import 'package:barcodescanner/barcodescanner.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 import 'package:hackzurich2017/start_page.dart';
+
+final _auth = FirebaseAuth.instance;
 
 class InfoPage extends StatefulWidget {
   static MaterialPageRoute createRoute(
@@ -86,7 +89,7 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   _navigateToStartPage() async {
-    var firebaseUser = await auth.currentUser();
+    var firebaseUser = await _auth.currentUser();
     await Navigator.push(
         context, StartPage.createRoute(context, "Start Page", firebaseUser));
   }
