@@ -2,17 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hackzurich2017/firebase_helper.dart';
 
 Future<String> afterLogin(String email, String imageUrl) async {
   final emailHash = _emailHash(email);
-  final user = (await db().child("users/${emailHash}").once()).value;
-  if (user != null) return null;
+  final groupId = (await db().child("users/${emailHash}/group").once()).value;
+  if (groupId != null) return groupId;
 
-  final groupId = await _createGroup(emailHash, imageUrl);
-  await _createUser(imageUrl, emailHash, groupId);
-  return groupId;
+  final newGroupId = await _createGroup(emailHash, imageUrl);
+  await _createUser(imageUrl, emailHash, newGroupId);
+  return newGroupId;
 }
 
 Future<String> _createGroup(emailHash, imageUrl) async {
@@ -65,5 +64,7 @@ Future<Null> addToExcluded(
 testFunc() {}
 
 String _emailHash(String email) {
-  return BASE64.encode(email.codeUnits).replaceAll(new RegExp('[/]'), 'slash');
+  return BASE64
+      .encode(email.toLowerCase().codeUnits)
+      .replaceAll(new RegExp('[/]'), 'slash');
 }
