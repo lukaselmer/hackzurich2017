@@ -86,7 +86,7 @@ class _InfoPageState extends State<InfoPage> {
                   onPressed: _dislikeProduct,
                   child: new Text("PLEASE BUY THIS 😍"),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -95,9 +95,7 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   _getInfos() {
-    return new Center(
-      child: new Text(text),
-    );
+    return new Text(text);
   }
 
   Widget _getImage() {
@@ -125,8 +123,7 @@ class _InfoPageState extends State<InfoPage> {
         textAlign: TextAlign.center,
       );
     return new Text('Yay, everyone likes this! 😃',
-      style: new TextStyle(fontSize: 22.0),
-      textAlign: TextAlign.center);
+        style: new TextStyle(fontSize: 22.0), textAlign: TextAlign.center);
 
     /* var sugarValue = snapshot.value['body'];//['data'][0]['nutrients']['sugars']['per_hundred'];
     var sugar = double.parse(sugarValue);

@@ -7,7 +7,7 @@ import 'package:hackzurich2017/firebase_helper.dart';
 
 Future<String> afterLogin(String email, String imageUrl) async {
   final emailHash = _emailHash(email);
-  final groupId = (await db().child("users/${emailHash}/group").once()).value;
+  final groupId = (await db().child("users/$emailHash/group").once()).value;
   if (groupId != null) return groupId;
 
   final newGroupId = await _createGroup(emailHash, imageUrl);

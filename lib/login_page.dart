@@ -107,19 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // * https://github.com/flutter/plugins/pull/94
     // * https://github.com/flutter/flutter/issues/10552
     GoogleSignInAccount googleUser = _googleSignIn.currentUser;
-    try {
-      if (googleUser == null) googleUser = await _googleSignIn.signInSilently();
-    } catch (error) {
-      print("first error");
-      print(error);
-    }
-    try {
-      if (googleUser == null) googleUser = await _googleSignIn.signIn();
-      print("logged in as ${googleUser}");
-    } catch (error) {
-      print("second error");
-      print(error);
-    }
+    if (googleUser == null) googleUser = await _googleSignIn.signInSilently();
+    if (googleUser == null) googleUser = await _googleSignIn.signIn();
 
     if (googleUser == null) {
       print("Error signing in google user!");
@@ -137,7 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final groupId = await afterLogin(firebaseUser.email, firebaseUser.photoUrl);
     final images = await groupImages(groupId);
-    await Navigator.push(context,
-        StartPage.createRoute(context, "Start Page", groupId, images, firebaseUser));
+    await Navigator.push(
+        context,
+        StartPage.createRoute(
+            context, "Start Page", groupId, images, firebaseUser));
   }
 }
